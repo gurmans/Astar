@@ -53,7 +53,7 @@ The final path represented as a sequence of puzzle states:
 
  [['_' '1' '2']
  ['3' '4' '5']
- ['6' '7' '8']] 4```
+ ['6' '7' '8']] 4
 
 ### Author
 
