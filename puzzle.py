@@ -40,7 +40,7 @@ def astar(init,heur):
                     flag = True
                     paths.append(newpath)
                     break
-        if (current.hcost == 0 and heur != '2') or np.array_equal(current.conf, final_pzl):
+        if (current.hcost == 0 and heur != '0') or np.array_equal(current.conf, final_pzl):
             return paths
         explored.append(current)
         flag = True
@@ -102,7 +102,7 @@ def switch(node, pos1, pos2, heur):
     
 
 def getHeuristicValue(pzl,heur):
-    if heur == '2':
+    if heur == '0':
         return 0
     heuristic = 0
     for i in range(1,9):
@@ -116,11 +116,17 @@ def isValid(src):
     for i,num in enumerate(src):
         if num == '_':
             continue
+        if not num.isnumeric() or int(num) > 8 or int(num)<1:
+            print('The input should be numbers in the range of 1 to 8')
+            return False
         for num2 in src[i+1:]:
             if num2 == '_':
                 continue
             if num > num2:
                 count += 1
+    if count%2 != 0:
+        print("The given instance of puzzle is insolvable because it has an odd number of inversions.")
+        return False
     return count%2 == 0
 
 class Node:
@@ -130,23 +136,21 @@ class Node:
     self.hcost = hcost
 
 if __name__=="__main__":
-    if(len(sys.argv)!=11):
+    if(len(sys.argv)!=10):
         raise ValueError("invalid Number of Arguments : ", len(sys.argv))
-    src = sys.argv[1:10]
-    heur = sys.argv[10]
-    if heur == '2':
-        print("Heuristic used: 0")
-    else:
-        print("Heuristic used: Manhattan Distance")
-    if not isValid(src):
-        print("The given instance of puzzle is insolvable because it has an odd number of inversions.")
-    else:
+    src = sys.argv[1:]
+    if isValid(src):
+        heur = input("Please enter heuristic to be used (0 for 0, 1 or anything else for Manhattan distance) : ") 
+        if heur == '0':
+            print("Heuristic used: 0")
+        else:
+            print("Heuristic used: Manhattan Distance")
         pzl = Node(src,0,0)
         pzl.hcost = getHeuristicValue(pzl,heur)
         res = astar(pzl,heur)
         fres=[]
         for path in res:
-            if path[-1].hcost == 0 and heur != '2':
+            if path[-1].hcost == 0 and heur != '0':
                 fres = path
             elif np.array_equal(path[-1].conf, final_pzl):
                 fres = path
