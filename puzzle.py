@@ -17,6 +17,7 @@ def astar(init,heur):
     frontier = [init]
     explored = []
     paths = [[init]]
+    print("Input configuration:")
     print(init.conf)
     while True:
         if not frontier:
@@ -127,7 +128,7 @@ def isValid(src):
     if count%2 != 0:
         print("The given instance of puzzle is insolvable because it has an odd number of inversions.")
         return False
-    return count%2 == 0
+    return True
 
 class Node:
   def __init__(self, pzl, pcost, hcost):
@@ -139,7 +140,7 @@ if __name__=="__main__":
     if(len(sys.argv)!=10):
         raise ValueError("invalid Number of Arguments : ", len(sys.argv))
     src = sys.argv[1:]
-    if isValid(src):
+    if isValid(src):#Reason for this validated from https://www.geeksforgeeks.org/check-instance-8-puzzle-solvable/
         heur = input("Please enter heuristic to be used (0 for 0, 1 or anything else for Manhattan distance) : ") 
         if heur == '0':
             print("Heuristic used: 0")
