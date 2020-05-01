@@ -113,6 +113,10 @@ def getHeuristicValue(pzl,heur):
     return heuristic
 
 def isValid(src):
+    if len(src) > len(set(src)):
+        print('The input should be unique numbers in the range of 1 to 8')
+        return False
+
     count = 0
     for i,num in enumerate(src):
         if num == '_':
@@ -137,15 +141,16 @@ class Node:
     self.hcost = hcost
 
 if __name__=="__main__":
-    if(len(sys.argv)!=10):
+    if(len(sys.argv)!=11):
         raise ValueError("invalid Number of Arguments : ", len(sys.argv))
-    src = sys.argv[1:]
+    src = sys.argv[2:]
+#    heur = input("Please enter heuristic to be used (0 for 0, 1 or anything else for Manhattan distance) : ") 
+    heur = sys.argv[1]
+    if heur == '0':
+        print("Heuristic used: 0")
+    else:
+        print("Heuristic used: Manhattan Distance")
     if isValid(src):#Reason for this validated from https://www.geeksforgeeks.org/check-instance-8-puzzle-solvable/
-        heur = input("Please enter heuristic to be used (0 for 0, 1 or anything else for Manhattan distance) : ") 
-        if heur == '0':
-            print("Heuristic used: 0")
-        else:
-            print("Heuristic used: Manhattan Distance")
         pzl = Node(src,0,0)
         pzl.hcost = getHeuristicValue(pzl,heur)
         res = astar(pzl,heur)
