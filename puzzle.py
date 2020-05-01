@@ -14,9 +14,9 @@ final_state = {'_':[0,0],'1':[0,1],'2':[0,2],'3':[1,0],'4':[1,1],'5':[1,2],'6':[
 final_pzl = [['_','1','2'],['3','4','5'],['6','7','8']]
 
 def astar(init,heur):
-    frontier = [init]
-    explored = []
-    paths = [[init]]
+    frontier = [init]   #Keeps track of all unexplored nodes
+    explored = []       #Leeps track of all explored nodes
+    paths = [[init]]    #Stores a list of all possible paths
     print("Input configuration:")
     print(init.conf)
     while True:
@@ -34,7 +34,7 @@ def astar(init,heur):
         for path in paths:
             if flag:
                 break
-            for i, node in enumerate(path):
+            for i, node in enumerate(path): #Need for creating new path
                 if areNeighbours(current, node, heur):
                     newpath = path[0:i+1]
                     newpath.append(current)
@@ -45,14 +45,14 @@ def astar(init,heur):
             return paths
         explored.append(current)
         flag = True
-        for nbrindex, nbr in enumerate(getNeighbors(current,heur)):
+        for nbrindex, nbr in enumerate(getNeighbors(current,heur)):     #Inserting all the neighbours of current node to the frontier according to their priorities.
             if not inArray(nbr,frontier) and not inArray(nbr,explored):
                 flag = False
                 keys = [o.pcost+o.hcost for o in frontier]
                 index = bisect.bisect_right(keys,nbr.pcost+nbr.hcost)
                 frontier.insert(index, nbr)
 
-def areNeighbours(pzl1,pzl2,heur):
+def areNeighbours(pzl1,pzl2,heur):  #two nodes are neighbours if we can reach from one configuration to other in a single step
     if np.array_equal(pzl1,pzl2):
         return False
     pos1 = np.where(pzl1.conf == '_')
