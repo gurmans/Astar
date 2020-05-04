@@ -11,6 +11,7 @@ import numpy as np
 import copy
 
 final_state = {'_':[0,0],'1':[0,1],'2':[0,2],'3':[1,0],'4':[1,1],'5':[1,2],'6':[2,0],'7':[2,1],'8':[2,2]}
+#final_state = {'4':[0,0],'1':[0,1],'2':[0,2],'7':[1,0],'_':[1,1],'5':[1,2],'6':[2,0],'3':[2,1],'8':[2,2]}
 final_pzl = [['_','1','2'],['3','4','5'],['6','7','8']]
 
 def astar(init,heur):
@@ -51,6 +52,10 @@ def astar(init,heur):
                 keys = [o.pcost+o.hcost for o in frontier]
                 index = bisect.bisect_right(keys,nbr.pcost+nbr.hcost)
                 frontier.insert(index, nbr)
+            for i in frontier: #Updating frontier pcosts if a new shorter path to a particular node in frontier is found
+                if np.array_equal(i.conf, nbr.conf) and i.pcost > nbr.pcost:
+#                    print('updated {} from {} to {}'.format(i.conf, i.pcost, nbr.pcost))
+                    i.pcost = nbr.pcost
 
 def areNeighbours(pzl1,pzl2,heur):  #two nodes are neighbours if we can reach from one configuration to other in a single step
     if np.array_equal(pzl1,pzl2):
